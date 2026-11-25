@@ -36,6 +36,12 @@ Toda la información se almacena de forma local mediante **Room Database**, gara
 - **Eliminación:** Borrar videojuegos de forma individual o múltiple (`deleteGame` / `deleteGames`), eliminando en cascada sus logros asociados.
 - **Consulta:** Visualizar la lista de videojuegos con su portada, plataforma, estado y progreso actualizado.
 
+![Biblioteca de videojuegos](assets/1.jpg)
+
+![Agregar videojuego](assets/2.jpg)
+
+![Editar videojuego](assets/3.jpg)
+
 ### 2.2 Plataformas soportadas
 Cada videojuego puede clasificarse dentro de una de las siguientes plataformas:
 - **PC**
@@ -60,6 +66,10 @@ Cada videojuego dispone de su propia pantalla de administración de logros donde
 - Consultar el listado completo de logros del juego.
 - Marcar logros como completados o desmarcarlos en cualquier momento.
 - Eliminar logros de forma individual o múltiple (`deleteAchievement` / `deleteAchievements`).
+
+![Pantalla de logros del videojuego](assets/4.jpg)
+
+![Registrar nuevo logro](assets/5.jpg)
 
 ### 2.5 Seguimiento automático del progreso y estado
 - El porcentaje de progreso de cada videojuego se calcula automáticamente a partir de la relación entre **logros completados** y **total de logros registrados**.
@@ -112,69 +122,3 @@ com.example.gamevaul
         ├── Color.kt                 # Paleta de colores de la aplicación
         ├── Theme.kt                 # Configuración del tema claro/oscuro y esquemas de color
         └── Type.kt                  # Estilos tipográficos
-```
-
----
-
-## 5. Modelo de datos y base de datos (Room)
-
-La persistencia se gestiona mediante `GameDatabase`, provista como instancia única a través de `DatabaseProvider`. Incluye soporte para evolución de esquema mediante la migración `MIGRATION_1_2`.
-
-### 5.1 Entidades principales
-
-1. **`GameEntity` (Tabla de videojuegos):**
-   - `id`: Identificador único del videojuego (clave primaria).
-   - `name` / Título: Nombre del videojuego.
-   - `platform`: Plataforma asociada (PC, PlayStation, Xbox, Nintendo).
-   - `description`: Descripción o notas del título.
-   - `status`: Estado actual del videojuego (determinado según su avance).
-   - `progress`: Porcentaje de progreso calculado.
-   - `imageRes` / Recurso de imagen: Identificador o nombre de la portada asignada según la categoría.
-
-2. **`AchievementEntity` (Tabla de logros):**
-   - `id`: Identificador único del logro (clave primaria).
-   - `gameId`: Clave foránea que vincula el logro con su videojuego correspondiente.
-   - Título / Descripción del logro.
-   - Estado de finalización (completado / pendiente).
-
-3. **`GameWithProgress`:**
-   - Estructura utilizada para combinar la información del videojuego con el cálculo o detalle de su progreso y logros asociados en las consultas de la capa de datos.
-
-### 5.2 Integridad referencial
-- Existe una relación **uno a muchos (`1:N`)** entre `GameEntity` y `AchievementEntity` a través de `gameId`.
-- La clave foránea está configurada con **eliminación en cascada (`ON DELETE CASCADE`)**: al eliminar un videojuego, todos sus logros vinculados se borran automáticamente para evitar registros huérfanos.
-
----
-
-## 6. Requisitos e instalación
-
-### 6.1 Requisitos del entorno
-- **IDE:** Android Studio (versión reciente compatible con Kotlin y Jetpack Compose).
-- **JDK:** Java Development Kit 11 o superior.
-- **SDK de Android:** Compile/Target SDK 37.
-- **Versión mínima soportada:** Android 7.0 Nougat (**API 24**) o superior (en dispositivo físico o emulador).
-
-### 6.2 Pasos para ejecutar el proyecto
-1. Clonar o descargar el repositorio del proyecto (`GameVaul`).
-2. Abrir la carpeta raíz del proyecto desde **Android Studio**.
-3. Esperar a que **Gradle** descargue las dependencias y sincronice el proyecto (incluyendo el procesamiento de anotaciones con **KSP**).
-4. Seleccionar un emulador configurado o conectar un dispositivo Android con depuración USB activada.
-5. Presionar **Run (`Shift + F10`)** para compilar e instalar la aplicación.
-
----
-
-## 7. Objetivo y alcance
-
-Desarrollar una aplicación móvil nativa para Android intuitiva, rápida y completamente funcional sin conexión, que permita a cualquier jugador organizar su colección personal de videojuegos por plataforma y categoría, y mantener un seguimiento claro y automatizado de sus logros y porcentaje de avance.
-
----
-
-## 8. Ficha técnica
-
-- **Nombre de la aplicación:** GameVault
-- **Paquete del proyecto:** `com.example.gamevaul`
-- **Plataforma:** Android (API 24+)
-- **Lenguaje:** Kotlin
-- **Interfaz de usuario:** Jetpack Compose + Material 3
-- **Arquitectura:** MVVM con Coroutines y StateFlow
-- **Base de datos:** Room + KSP
